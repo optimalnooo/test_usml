@@ -32,6 +32,7 @@ class Solver_8_queens:
 
 	def fitness(sel, individual):
 		#dummy method
+		pass
 
 
 	def get_init_population(self, size):
@@ -49,6 +50,26 @@ class Solver_8_queens:
 		return chromosome
 
 
+	def show_individual(self, individual):
+		'''
+		individual vizualization
+		'''
+
+		display = [['_' for _ in range(Solver_8_queens.DIM_SIZE)] for _ in range(Solver_8_queens.DIM_SIZE)]
+		for chrom in individual:
+			display[chrom[0]][chrom[1]] = '#'
+
+		#show
+		for i in range(Solver_8_queens.DIM_SIZE):
+			for j in range(Solver_8_queens.DIM_SIZE):
+				print(display[i][j], end='')
+			print('')
+
+
 def main():
 	
 	q = Solver_8_queens()
+
+	individual = q.get_random_individual()
+
+	q.show_individual(individual)
