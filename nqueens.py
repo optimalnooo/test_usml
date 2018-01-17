@@ -14,9 +14,24 @@ class Solver_8_queens:
 		pass
 
 
+	def get_selected_individual(self, population):
+		'''
+		roulette wheel
+		'''
+
+		weights = [self.fitness(individ) for individ in population]
+		weights_sum = sum(weights)
+
+		rand_value = random.random() * weights_sum
+
+		for i, w in enumerate(weights):
+			rand_value -= w
+			if rand_value <=0:
+				return population[i]
+
+
 	def fitness(sel, individual):
 		#dummy method
-		pass
 
 
 	def get_init_population(self, size):
