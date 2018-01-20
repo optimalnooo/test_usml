@@ -34,8 +34,21 @@ class Solver_8_queens:
             for j in range(i+1, Solver_8_queens.DIM_SIZE):
                 if self.check_pair_chromosomes(individual[i], individual[j]):
                     count += 1
+        if count == (Solver_8_queens.DIM_SIZE * (Solver_8_queens.DIM_SIZE - 1) / 2):
+            self.show_individual(individual)
         return count
 
+    def crossover(self, indiv1, indiv2):
+        crossover_point = np.random.randint(0, 8)
+        new_indiv1 = np.concatenate((
+            indiv1[:crossover_point],
+            indiv2[crossover_point:]
+        ))
+        new_indiv2 = np.concatenate((
+            indiv2[:crossover_point],
+            indiv1[crossover_point:]
+        ))
+        return new_indiv1, new_indiv2
 
     def check_pair_chromosomes(self, chrm1, chrm2):
         '''check chromosomes
@@ -63,17 +76,24 @@ class Solver_8_queens:
         display.fill('+')
         for index, row in zip(individual, display):
             row[index] = 'Q'
-            print(row)
+            for el in row:
+                print(el, end='')
+            print()
 
 
 def main():
     
     q = Solver_8_queens()
 
-    indiv = q.get_random_individual()
-    print(indiv)
+    indiv1 = q.get_random_individual()
+    indiv2 = q.get_random_individual()
+    new1, new2 = q.crossover(indiv1, indiv2)
 
-    print(q.show_individual(indiv))
+    print(indiv1)
+    print(indiv2)
+    print()
+    print(new1)
+    print(new2)
 
     #q->solver
     #best_fit, epoch_num, visualization = solver.solve()
