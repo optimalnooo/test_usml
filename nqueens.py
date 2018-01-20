@@ -5,15 +5,11 @@ import numpy as np
 class Solver_8_queens:
 
     DIM_SIZE = 8
-    DIMENSION = 2
 
     def __init__(self, pop_size=100, cross_prob=0.5, mut_prob=0.25):
         pass
 
     def solve(self, min_fitness=0.9, max_epochs=100):
-        pass
-
-    def create_start_population(self):
         pass
 
     def get_selected_individual(self, population):
@@ -55,34 +51,19 @@ class Solver_8_queens:
         else:
             return True
 
-    def get_init_population(self, size):
-        population = [self.get_random_individual() for _ in range(size)]
-        return population
+    def get_start_population(self, size):
+        return np.array([self.get_random_individual() for _ in range(size)])
 
     def get_random_individual(self):
-        individual = [self.get_random_chromosome()
-            for _ in range(Solver_8_queens.DIM_SIZE)]
-        return individual
-
-    def get_random_chromosome(self):
-        chromosome = random.choices(
-            range(Solver_8_queens.DIM_SIZE),
-            k=Solver_8_queens.DIMENSION
-        )
-        return chromosome
+        return np.random.permutation(Solver_8_queens.DIM_SIZE)
 
     def show_individual(self, individual):
         '''individual vizualization'''
-        display = [['+' for _ in range(Solver_8_queens.DIM_SIZE)]
-            for _ in range(Solver_8_queens.DIM_SIZE)
-        ]
-        for chrm in individual:
-            display[chrm[0]][chrm[1]] = 'Q'
-        #show
-        for i in range(Solver_8_queens.DIM_SIZE):
-            for j in range(Solver_8_queens.DIM_SIZE):
-                print(display[i][j], end='')
-            print('')
+        display = np.empty((Solver_8_queens.DIM_SIZE, Solver_8_queens.DIM_SIZE), dtype='str')
+        display.fill('+')
+        for index, row in zip(individual, display):
+            row[index] = 'Q'
+            print(row)
 
 
 def main():
@@ -92,7 +73,7 @@ def main():
     indiv = q.get_random_individual()
     print(indiv)
 
-    print(q.fitness(indiv))
+    print(q.show_individual(indiv))
 
     #q->solver
     #best_fit, epoch_num, visualization = solver.solve()
