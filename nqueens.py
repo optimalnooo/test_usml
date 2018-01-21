@@ -24,7 +24,7 @@ class Solver_8_queens:
             rand_value -= w
             if rand_value <=0:
                 return population[i]
-    #!
+    
     def fitness_population(self, population):
         '''fitness function
         return:
@@ -121,6 +121,30 @@ class Solver_8_queens:
 def main():
     
     q = Solver_8_queens()
+
+    ar = []
+    for i in range(10000):
+        indiv = q.get_random_individual()
+        ar.append(indiv)
+    print('Start population was created')
+    new_ar = []
+    weights, weights_sum = q.fitness_population(ar)
+
+    for i in range(10000):
+        ind1 = q.get_selected_individual(ar, weights, weights_sum)
+        ind2 = q.get_selected_individual(ar, weights, weights_sum)
+        a,b = q.crossover(ind1, ind2)
+        new_ar.append(a)
+        new_ar.append(b)
+        if i % 1000 == 0:
+            print(i)
+    print("Was success: ", end='')
+    print(Solver_8_queens.RESULT)
+    Solver_8_queens.RESULT = 0
+
+    print("Now success: ", end='')
+    q.fitness_population(new_ar)
+    print(Solver_8_queens.RESULT)
 
     #q->solver
     #best_fit, epoch_num, visualization = solver.solve()
