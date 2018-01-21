@@ -50,19 +50,22 @@ class Solver_8_queens:
         return weights, weights_sum
     
     def crossover(self, indiv1, indiv2):
-        crossover_point = np.random.randint(
-            0,
-            Solver_8_queens.DIM_SIZE * Solver_8_queens.GENE_SIZE
-        )
-        new_indiv1 = bitarray(
-            indiv1[:crossover_point]
-            + indiv2[crossover_point:]
-        )
-        new_indiv2 = bitarray(
-            indiv2[:crossover_point]
-            + indiv1[crossover_point:]
-        )
-        return new_indiv1, new_indiv2
+        if np.random.rand < self.cross_prob:
+            return indiv1, indiv2
+        else:
+            crossover_point = np.random.randint(
+                0,
+                Solver_8_queens.DIM_SIZE * Solver_8_queens.GENE_SIZE
+            )
+            new_indiv1 = bitarray(
+                indiv1[:crossover_point]
+                + indiv2[crossover_point:]
+            )
+            new_indiv2 = bitarray(
+                indiv2[:crossover_point]
+                + indiv1[crossover_point:]
+            )
+            return new_indiv1, new_indiv2
 
     def mutation(self):
         for individ in self.population:
