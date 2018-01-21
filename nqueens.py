@@ -7,6 +7,7 @@ class Solver_8_queens:
 
     DIM_SIZE = 8
     GENE_SIZE = 3
+    MAX_FITNESS_VALUE = DIM_SIZE * (DIM_SIZE - 1) / 2
 
     FOUND_DECISION = False
     RESULT = 0
@@ -14,7 +15,7 @@ class Solver_8_queens:
     def __init__(self, pop_size=100, cross_prob=0.5, mut_prob=0.25):
         pass
 
-    def solve(self, min_fitness=0.9, max_epochs=100):
+    def solve(self, min_fitness=Solver_8_queens.MAX_FITNESS_VALUE, max_epochs=100):
         pass
 
     def get_selected_individual(self, population, weights, weights_sum):
