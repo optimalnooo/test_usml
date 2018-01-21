@@ -18,15 +18,15 @@ class Solver_8_queens:
     def solve(self, min_fitness=Solver_8_queens.MAX_FITNESS_VALUE, max_epochs=100):
         pass
 
-    def get_selected_individual(self, population, weights, weights_sum):
+    def get_selected_individual(self, weights, weights_sum):
         '''roulette wheel'''
         rand_value = random.random() * weights_sum
         for i, w in enumerate(weights):
             rand_value -= w
             if rand_value <=0:
-                return population[i]
+                return self.population[i]
     
-    def fitness_population(self, population):
+    def fitness_population(self):
         '''fitness function
         return:
           int array - weights array for each individual
@@ -36,7 +36,7 @@ class Solver_8_queens:
           the more weight the better
         '''
         weights = []
-        for individual in population:
+        for individual in self.population:
             count = 0
             for i in range(Solver_8_queens.DIM_SIZE):
                 for j in range(i+1, Solver_8_queens.DIM_SIZE):
