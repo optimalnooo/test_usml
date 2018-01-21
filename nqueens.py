@@ -81,8 +81,8 @@ class Solver_8_queens:
         else:
             return True
     
-    def get_start_population(self, size):
-        return np.array([self.get_random_individual() for _ in range(size)])
+    def get_start_population(self):
+        return [self.get_random_individual() for _ in range(self.pop_size)]
     
     def get_random_individual(self):
         individual = bitarray(endian='little')
