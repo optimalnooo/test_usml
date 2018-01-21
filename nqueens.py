@@ -39,7 +39,7 @@ class Solver_8_queens:
             count = 0
             for i in range(Solver_8_queens.DIM_SIZE):
                 for j in range(i+1, Solver_8_queens.DIM_SIZE):
-                    if self.check_pair_chromosomes([i, individual[i]], [j, individual[j]]):
+                    if self.check_pair_queens([i, individual[i]], [j, individual[j]]):
                         count += 1
             if count == (Solver_8_queens.DIM_SIZE * (Solver_8_queens.DIM_SIZE - 1) / 2):
                 Solver_8_queens.RESULT += 1
