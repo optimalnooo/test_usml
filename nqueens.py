@@ -63,6 +63,13 @@ class Solver_8_queens:
             + indiv1[crossover_point:]
         )
         return new_indiv1, new_indiv2
+
+    def mutation(self):
+        for individ in self.population:
+            if np.random.rand() < self.mut_prob:
+                locus = np.random.randint(0,
+                    Solver_8_queens.DIM_SIZE*Solver_8_queens.GENE_SIZE)
+                individ[locus] = individ[locus:locus+1].invert()
     
     def check_pair_queens(self, q1, q2):
         '''check only diagonal intersection
