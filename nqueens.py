@@ -69,7 +69,7 @@ class Solver_8_queens:
             if np.random.rand() < self.mut_prob:
                 locus = np.random.randint(0,
                     Solver_8_queens.DIM_SIZE*Solver_8_queens.GENE_SIZE)
-                individ[locus] = individ[locus:locus+1].invert()
+                individ[locus] = not individ[locus]
     
     def check_pair_queens(self, q1, q2):
         '''check only diagonal intersection
