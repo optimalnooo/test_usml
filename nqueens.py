@@ -9,11 +9,16 @@ class Solver_8_queens:
     GENE_SIZE = 3
     MAX_FITNESS_VALUE = DIM_SIZE * (DIM_SIZE - 1) / 2
 
-    FOUND_DECISION = False
-    RESULT = 0
-
-    def __init__(self, pop_size=100, cross_prob=0.5, mut_prob=0.25):
-        pass
+    def __init__(self, pop_size=3, cross_prob=1, mut_prob=0.1):
+        if pop_size % 2:
+            self.pop_size = pop_size + 1
+        else:
+            self.pop_size = pop_size
+        self.cross_prob = cross_prob
+        self.mut_prob = mut_prob
+        self.best_fitness_value = 0
+        self.best_individ = None
+        self.population = self.get_start_population()
 
     def solve(self, min_fitness=Solver_8_queens.MAX_FITNESS_VALUE, max_epochs=100):
         pass
