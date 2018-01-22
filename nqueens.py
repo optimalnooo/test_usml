@@ -129,16 +129,16 @@ class Solver_8_queens:
         return [self.get_random_individual() for _ in range(self.pop_size)]
     
     def get_random_individual(self):
-        individual = bitarray(endian='little')
-        individual.frombytes(np.random.bytes(Solver_8_queens.GENE_SIZE))
-        return individual
+        individ = bitarray(endian='little')
+        individ.frombytes(np.random.bytes(Solver_8_queens.GENE_SIZE))
+        return individ
     
-    def decode_individual(self, individual):
-        decoded_individual = []
+    def decode_individual(self, individ):
+        decoded_individ = []
         occupied_cols = [False for _ in range(Solver_8_queens.DIM_SIZE)]
         current_cols = 0
         biases = [int.from_bytes(
-            individual[Solver_8_queens.GENE_SIZE*i:
+            individ[Solver_8_queens.GENE_SIZE*i:
                 Solver_8_queens.GENE_SIZE*(i+1)].tobytes(),
             'little') for i in range(Solver_8_queens.DIM_SIZE)
         ]
@@ -147,13 +147,13 @@ class Solver_8_queens:
             current_cols %= Solver_8_queens.DIM_SIZE
             for _ in range(Solver_8_queens.DIM_SIZE):
                 if not occupied_cols[current_cols]:
-                    decoded_individual.append(current_cols)
+                    decoded_individ.append(current_cols)
                     occupied_cols[current_cols] = True
                     break
                 else:
                     current_cols += 1
                     current_cols %= Solver_8_queens.DIM_SIZE
-        return decoded_individual
+        return decoded_individ
     
     def get_individ_visualization(self, individ):
         '''individual string interpretation for vizualization'''
