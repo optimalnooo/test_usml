@@ -155,47 +155,13 @@ class Solver_8_queens:
                     current_cols %= Solver_8_queens.DIM_SIZE
         return decoded_individual
     
-    def show_individual(self, individual):
-        '''individual vizualization'''
-        display = np.empty(
-            (Solver_8_queens.DIM_SIZE, Solver_8_queens.DIM_SIZE),
-            dtype='str'
-        )
-        display.fill('+')
-        decoded_individual = self.decode_individual(individual)
-        for index, row in zip(decoded_individual, display):
+    def get_individ_visualization(self, individ):
+        '''individual string interpretation for vizualization'''
+        display = [['+' for _ in range(Solver_8_queens.DIM_SIZE)]
+            for _ in range(Solver_8_queens.DIM_SIZE)]
+        decoded_individ = self.decode_individual(individ)
+        for index, row in zip(decoded_individ, display):
             row[index] = 'Q'
-            for el in row:
-                print(el, end='')
-            print()
-
-def main():
-    
-    q = Solver_8_queens()
-
-    ar = []
-    for i in range(10000):
-        indiv = q.get_random_individual()
-        ar.append(indiv)
-    print('Start population was created')
-    new_ar = []
-    weights, weights_sum = q.fitness_population(ar)
-
-    for i in range(10000):
-        ind1 = q.get_selected_individual(ar, weights, weights_sum)
-        ind2 = q.get_selected_individual(ar, weights, weights_sum)
-        a,b = q.crossover(ind1, ind2)
-        new_ar.append(a)
-        new_ar.append(b)
-        if i % 1000 == 0:
-            print(i)
-    print("Was success: ", end='')
-    print(Solver_8_queens.RESULT)
-    Solver_8_queens.RESULT = 0
-
-    print("Now success: ", end='')
-    q.fitness_population(new_ar)
-    print(Solver_8_queens.RESULT)
-
-    #q->solver
-    #best_fit, epoch_num, visualization = solver.solve()
+        rows = [''.join(row) for row in display]
+        viz = '\n'.join(rows)
+        return viz
