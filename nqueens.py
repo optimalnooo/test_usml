@@ -20,8 +20,35 @@ class Solver_8_queens:
         self.best_individ = None
         self.population = self.get_start_population()
 
-    def solve(self, min_fitness=Solver_8_queens.MAX_FITNESS_VALUE, max_epochs=100):
-        pass
+    def solve(
+        self,
+        min_fitness=MAX_FITNESS_VALUE,
+        max_epochs=5
+    ):
+        self.min_fitness = min_fitness
+        for epoch in range(1, max_epochs+1):
+            weights, weights_sum = self.fitness_population()
+            if self.best_fitness_value >= min_fitness:
+                return (self.best_fitness_value,
+                    epoch,
+                    self.get_individ_visualization(self.best_individ))
+            parents1 = [
+                self.get_selected_individual(weights, weights_sum)
+                for _ in range(self.pop_size//2)
+            ]
+            parents2 = [
+                self.get_selected_individual(weights, weights_sum)
+                for _ in range(self.pop_size//2)
+            ]
+            self.population = []
+            for parent1, parent2 in zip(parents1, parents2):
+                new_ind1, new_ind2 = self.crossover(parent1, parent2)
+                self.population.append(new_ind1)
+                self.population.append(new_ind2)
+            self.mutation()
+        return (self.best_fitness_value,
+            epoch,
+            self.get_individ_visualization(self.best_individ))
 
     def get_selected_individual(self, weights, weights_sum):
         '''roulette wheel'''
