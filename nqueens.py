@@ -91,7 +91,7 @@ class Solver_8_queens:
         return count
     
     def crossover(self, indiv1, indiv2):
-        if np.random.rand < self.cross_prob:
+        if np.random.rand() < self.cross_prob:
             return indiv1, indiv2
         else:
             crossover_point = np.random.randint(
