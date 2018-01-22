@@ -59,28 +59,36 @@ class Solver_8_queens:
                 return self.population[i]
     
     def fitness_population(self):
-        '''fitness function
+        '''fitness function for population
         return:
           int array - weights array for each individual
           int weights_sum - sum of weights
-
-          weight in range from 0 to DIM_SIZE * (DIM_SIZE - 1) / 2
-          the more weight the better
         '''
         weights = []
-        for individual in self.population:
-            count = 0
-            for i in range(Solver_8_queens.DIM_SIZE):
-                for j in range(i+1, Solver_8_queens.DIM_SIZE):
-                    if self.check_pair_queens([i, individual[i]], [j, individual[j]]):
-                        count += 1
-            if count == (Solver_8_queens.DIM_SIZE * (Solver_8_queens.DIM_SIZE - 1) / 2):
-                Solver_8_queens.RESULT += 1
-                #Solver_8_queens.FOUND_DECISION = True
-                #return None, None
+        for bit_individ in self.population:
+            count = self.fitness_individ(bit_individ)
             weights.append(count)
+            if count >= self.min_fitness:
+                return weights, None
         weights_sum = sum(weights) 
         return weights, weights_sum
+
+    def fitness_individ(self, bit_individ):
+        '''fitness function for individual
+        return:
+          weight - in range from 0 to DIM_SIZE * (DIM_SIZE - 1) / 2
+          the more weight the better'''
+        individ = self.decode_individual(bit_individ)
+        count = 0
+        for i in range(Solver_8_queens.DIM_SIZE):
+            for j in range(i+1, Solver_8_queens.DIM_SIZE):
+                if self.check_pair_queens([i, individ[i]], [j, individ[j]]):
+                    count += 1
+        #update best individual
+        if count >= self.best_fitness_value:
+            self.best_fitness_value = count
+            self.best_individ = bit_individ
+        return count
     
     def crossover(self, indiv1, indiv2):
         if np.random.rand < self.cross_prob:
