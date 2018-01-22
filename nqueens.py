@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import random
+import time
 import numpy as np
+import pandas as pd
 from bitarray import bitarray
 
 class Solver_8_queens:
@@ -9,7 +11,7 @@ class Solver_8_queens:
     GENE_SIZE = 3
     MAX_FITNESS_VALUE = DIM_SIZE * (DIM_SIZE - 1) / 2
 
-    def __init__(self, pop_size=3, cross_prob=1, mut_prob=0.1):
+    def __init__(self, pop_size=2000, cross_prob=1, mut_prob=0.7):
         if pop_size % 2:
             self.pop_size = pop_size + 1
         else:
@@ -23,7 +25,7 @@ class Solver_8_queens:
     def solve(
         self,
         min_fitness=MAX_FITNESS_VALUE,
-        max_epochs=5
+        max_epochs=20
     ):
         self.min_fitness = min_fitness
         for epoch in range(1, max_epochs+1):
@@ -165,3 +167,29 @@ class Solver_8_queens:
         rows = [''.join(row) for row in display]
         viz = '\n'.join(rows)
         return viz
+
+def tuning():
+    df = []
+    iters = 1000
+    max_epochs = 100
+    for pop_size in range(200, 3000, 100):
+        print('Pop_size: {0}'.format(pop_size))
+        for mut_prob in np.arange(0, 0.9, 0.1):
+            print('Mut_prob: {0}'.format(mut_prob))
+            errors = 0
+            all_time = 0
+            all_epochs = 0
+            for iterat in range(iters):
+                start = time.clock()
+                solver = Solver_8_queens(pop_size, 1, mut_prob)
+                best_fit, epoch, _ = solver.solve(Solver_8_queens.MAX_FITNESS_VALUE, max_epochs)
+                finish = time.clock()
+                all_time += finish - start
+                all_epochs += epoch
+                if best_fit < Solver_8_queens.MAX_FITNESS_VALUE:
+                    errors += 1
+            average_epoch = all_epochs / iters
+            average_time = all_time / iters
+            df.append([pop_size, mut_prob, max_epochs, errors, average_time, average_epoch])
+    df = pd.DataFrame(df, columns=['pop_size', 'mut_prob', 'max_epochs', 'errors', 'average_time', 'average_epoch'])
+    df.to_csv('tuning.csv')
