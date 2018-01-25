@@ -9,7 +9,7 @@ class Solver_8_queens:
 
     DIM_SIZE = 8
     GENE_SIZE = 3
-    MAX_FITNESS_VALUE = DIM_SIZE * (DIM_SIZE - 1) / 2
+    ABS_MAX_FITNESS_VALUE = DIM_SIZE * (DIM_SIZE - 1) / 2
 
     def __init__(self, pop_size=2000, cross_prob=1, mut_prob=0.7):
         if pop_size % 2:
@@ -24,7 +24,7 @@ class Solver_8_queens:
 
     def solve(
         self,
-        min_fitness=MAX_FITNESS_VALUE,
+        min_fitness=1,
         max_epochs=20
     ):
         self.min_fitness = min_fitness
@@ -63,14 +63,14 @@ class Solver_8_queens:
     def fitness_population(self):
         '''fitness function for population
         return:
-          int array - weights array for each individual
-          int weights_sum - sum of weights
+          float array - weights array for each individual
+          float weights_sum - sum of weights
         '''
         weights = []
         for bit_individ in self.population:
-            count = self.fitness_individ(bit_individ)
-            weights.append(count)
-            if count >= self.min_fitness:
+            weight = self.fitness_individ(bit_individ)
+            weights.append(weight)
+            if weight >= self.min_fitness:
                 return weights, None
         weights_sum = sum(weights) 
         return weights, weights_sum
@@ -78,7 +78,7 @@ class Solver_8_queens:
     def fitness_individ(self, bit_individ):
         '''fitness function for individual
         return:
-          weight - in range from 0 to DIM_SIZE * (DIM_SIZE - 1) / 2
+          weight - in range from 0 to 1
           the more weight the better'''
         individ = self.decode_individual(bit_individ)
         count = 0
@@ -86,11 +86,12 @@ class Solver_8_queens:
             for j in range(i+1, Solver_8_queens.DIM_SIZE):
                 if self.check_pair_queens([i, individ[i]], [j, individ[j]]):
                     count += 1
-        #update best individual
-        if count >= self.best_fitness_value:
-            self.best_fitness_value = count
+        #update best weight
+        weight = count / Solver_8_queens.ABS_MAX_FITNESS_VALUE;
+        if weight >= self.best_fitness_value:
+            self.best_fitness_value = weight
             self.best_individ = bit_individ
-        return count
+        return weight
     
     def crossover(self, indiv1, indiv2):
         if np.random.rand() < self.cross_prob:
