@@ -99,7 +99,7 @@ class Solver_8_queens:
         weight = count / Solver_8_queens.ABS_MAX_FITNESS_VALUE;
         if weight > self.best_fitness_value:
             self.best_fitness_value = weight
-            self.best_individ = bit_individ
+            self.best_individ = bitarray(bit_individ)
         return weight
     
     def crossover(self, indiv1, indiv2):
