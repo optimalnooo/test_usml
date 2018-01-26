@@ -27,10 +27,19 @@ class Solver_8_queens:
         min_fitness=1,
         max_epochs=20
     ):
-        self.min_fitness = min_fitness
-        for epoch in range(1, max_epochs+1):
+        if min_fitness is None:
+            #will not reach
+            self.min_fitness = 2
+        else:
+            self.min_fitness = min_fitness
+        epoch = 0
+        while(True):
+            if max_epochs is not None:
+                if epoch >= max_epochs:
+                    break
+            epoch += 1
             weights, weights_sum = self.fitness_population()
-            if self.best_fitness_value >= min_fitness:
+            if self.best_fitness_value >= self.min_fitness:
                 return (self.best_fitness_value,
                     epoch,
                     self.get_individ_visualization(self.best_individ))
