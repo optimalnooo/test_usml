@@ -13,7 +13,7 @@ class Solver_8_queens:
     GENE_SIZE = 3
     ABS_MAX_FITNESS_VALUE = DIM_SIZE * (DIM_SIZE - 1) / 2
 
-    def __init__(self, pop_size=2000, cross_prob=1, mut_prob=0.7, tournament_size=3):
+    def __init__(self, pop_size=2000, cross_prob=1, mut_prob=0.7, tournament_size=3, crossover_points_size=None):
         if pop_size % 2:
             self.pop_size = pop_size + 1
         else:
@@ -21,6 +21,7 @@ class Solver_8_queens:
         self.cross_prob = cross_prob
         self.mut_prob = mut_prob
         self.tournament_size = tournament_size
+        self.crossover_points_size = crossover_points_size
         self.best_fitness_value = 0
         self.best_individ = None
         self.population = self.get_start_population()
@@ -107,9 +108,24 @@ class Solver_8_queens:
         return weight
     
     def crossover(self, individ1, individ2):
-        '''Uniform crossover.'''
-        mask = bitarray(endian='little')
-        mask.frombytes(np.random.bytes(Solver_8_queens.GENE_SIZE))
+        '''Crossover.
+
+        If crossover_points_size
+            - is None, then use uniform crossover
+            - int number, then use multy-point crossover
+        '''
+        if self.crossover_points_size is None:
+            mask = bitarray(endian='little')
+            mask.frombytes(np.random.bytes(Solver_8_queens.GENE_SIZE))
+        else:
+            mask = bitarray(Solver_8_queens.DIM_SIZE
+                                * Solver_8_queens.GENE_SIZE)
+            mask.setall(False)
+            for i in range(self.crossover_points_size):
+                locus = np.random.randint(0,
+                    Solver_8_queens.DIM_SIZE * Solver_8_queens.GENE_SIZE)
+                mask[locus:] = ~mask[locus:]
+        print(mask)
         new_individ1 = bitarray()
         new_individ2 = bitarray()
         for i in range(len(mask)):
@@ -125,7 +141,7 @@ class Solver_8_queens:
         for individ in self.population:
             if np.random.rand() < self.mut_prob:
                 locus = np.random.randint(0,
-                    Solver_8_queens.DIM_SIZE*Solver_8_queens.GENE_SIZE)
+                    Solver_8_queens.DIM_SIZE * Solver_8_queens.GENE_SIZE)
                 individ[locus] = not individ[locus]
     
     def check_pair_queens(self, q1, q2):
