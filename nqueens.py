@@ -146,18 +146,17 @@ class Solver_8_queens:
         return individ
     
     def decode_individual(self, individ):
-        decoded_individ = []
-        occupied_cols = [False for _ in range(Solver_8_queens.DIM_SIZE)]
+        occupied_cols = bitarray(8)
+        occupied_cols.setall(False)
         current_cols = 0
-        biases = [int.from_bytes(
-            individ[Solver_8_queens.GENE_SIZE*i:
-                Solver_8_queens.GENE_SIZE*(i+1)].tobytes(),
-            'little') for i in range(Solver_8_queens.DIM_SIZE)
-        ]
-        for i in range(Solver_8_queens.DIM_SIZE):
-            current_cols += biases[i]
+        biases = [individ[Solver_8_queens.GENE_SIZE*i:
+            Solver_8_queens.GENE_SIZE*(i+1)].tobytes()[0]
+            for i in range(Solver_8_queens.DIM_SIZE)]
+        decoded_individ = []
+        for b in biases:
+            current_cols += b
             current_cols %= Solver_8_queens.DIM_SIZE
-            for _ in range(Solver_8_queens.DIM_SIZE):
+            while True:
                 if not occupied_cols[current_cols]:
                     decoded_individ.append(current_cols)
                     occupied_cols[current_cols] = True
