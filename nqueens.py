@@ -13,13 +13,14 @@ class Solver_8_queens:
     GENE_SIZE = 3
     ABS_MAX_FITNESS_VALUE = DIM_SIZE * (DIM_SIZE - 1) / 2
 
-    def __init__(self, pop_size=2000, cross_prob=1, mut_prob=0.7):
+    def __init__(self, pop_size=2000, cross_prob=1, mut_prob=0.7, tournament_size=3):
         if pop_size % 2:
             self.pop_size = pop_size + 1
         else:
             self.pop_size = pop_size
         self.cross_prob = cross_prob
         self.mut_prob = mut_prob
+        self.tournament_size = tournament_size
         self.best_fitness_value = 0
         self.best_individ = None
         self.population = self.get_start_population()
@@ -46,10 +47,10 @@ class Solver_8_queens:
 
             #selection (get parents)
             parents1 = [
-                self.get_selected_individual(weights, weights_sum)
+                self.get_selected_individual()
                 for _ in range(self.pop_size//2)]
             parents2 = [
-                self.get_selected_individual(weights, weights_sum)
+                self.get_selected_individual()
                 for _ in range(self.pop_size//2)]
 
             #create new population
@@ -64,13 +65,10 @@ class Solver_8_queens:
                 epoch,
                 self.get_individ_visualization(self.best_individ))
 
-    def get_selected_individual(self, weights, weights_sum):
-        '''Roulette wheel selection.'''
-        rand_value = random.random() * weights_sum
-        for i, w in enumerate(weights):
-            rand_value -= w
-            if rand_value <=0:
-                return self.population[i]
+    def get_selected_individual(self):
+        '''Tournament selection.'''
+        tour_list = [random.choice(self.population) for _ in range(self.tournament_size)]
+        return max(tour_list, key=self.fitness_individ)
     
     def fitness_population(self):
         '''Fitness function for population.
