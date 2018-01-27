@@ -108,20 +108,20 @@ class Solver_8_queens:
             self.best_individ = bitarray(bit_individ)
         return weight
     
-    def crossover(self, indiv1, indiv2):
-        if np.random.rand() < self.cross_prob:
-            return indiv1, indiv2
-        else:
-            crossover_point = np.random.randint(
-                0,
-                Solver_8_queens.DIM_SIZE * Solver_8_queens.GENE_SIZE)
-            new_indiv1 = bitarray(
-                indiv1[:crossover_point]
-                + indiv2[crossover_point:])
-            new_indiv2 = bitarray(
-                indiv2[:crossover_point]
-                + indiv1[crossover_point:])
-            return new_indiv1, new_indiv2
+    def crossover(self, individ1, individ2):
+        '''Uniform crossover.'''
+        mask = bitarray(endian='little')
+        mask.frombytes(np.random.bytes(Solver_8_queens.GENE_SIZE))
+        new_individ1 = bitarray()
+        new_individ2 = bitarray()
+        for i in range(len(mask)):
+            if mask[i]:
+                new_individ1.append(individ1[i])
+                new_individ2.append(individ2[i])
+            else:
+                new_individ1.append(individ2[i])
+                new_individ2.append(individ1[i])
+        return new_individ1, new_individ2
 
     def mutation(self):
         for individ in self.population:
