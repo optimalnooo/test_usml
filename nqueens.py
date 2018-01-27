@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 import random
 import time
+
 import numpy as np
 import pandas as pd
 from bitarray import bitarray
+
 
 class Solver_8_queens:
 
@@ -22,16 +24,12 @@ class Solver_8_queens:
         self.best_individ = None
         self.population = self.get_start_population()
 
-    def solve(
-        self,
-        min_fitness=1,
-        max_epochs=20
-    ):
+    def solve(self, min_fitness=1, max_epochs=20):
         if min_fitness is None:
-            #will not reach
-            self.min_fitness = 2
+            self.min_fitness = 2  #will not reach
         else:
             self.min_fitness = min_fitness
+
         epoch = 0
         while(True):
             if max_epochs is not None:
@@ -39,30 +37,35 @@ class Solver_8_queens:
                     break
             epoch += 1
             weights, weights_sum = self.fitness_population()
+
+            # check fitness condition
             if self.best_fitness_value >= self.min_fitness:
                 return (self.best_fitness_value,
-                    epoch,
-                    self.get_individ_visualization(self.best_individ))
+                        epoch,
+                        self.get_individ_visualization(self.best_individ))
+
+            #selection (get parents)
             parents1 = [
                 self.get_selected_individual(weights, weights_sum)
-                for _ in range(self.pop_size//2)
-            ]
+                for _ in range(self.pop_size//2)]
             parents2 = [
                 self.get_selected_individual(weights, weights_sum)
-                for _ in range(self.pop_size//2)
-            ]
+                for _ in range(self.pop_size//2)]
+
+            #create new population
             self.population = []
             for parent1, parent2 in zip(parents1, parents2):
                 new_ind1, new_ind2 = self.crossover(parent1, parent2)
                 self.population.append(new_ind1)
                 self.population.append(new_ind2)
             self.mutation()
+
         return (self.best_fitness_value,
-            epoch,
-            self.get_individ_visualization(self.best_individ))
+                epoch,
+                self.get_individ_visualization(self.best_individ))
 
     def get_selected_individual(self, weights, weights_sum):
-        '''roulette wheel'''
+        '''Roulette wheel selection.'''
         rand_value = random.random() * weights_sum
         for i, w in enumerate(weights):
             rand_value -= w
@@ -70,10 +73,11 @@ class Solver_8_queens:
                 return self.population[i]
     
     def fitness_population(self):
-        '''fitness function for population
-        return:
-          float array - weights array for each individual
-          float weights_sum - sum of weights
+        '''Fitness function for population.
+
+        Return:
+            float array - weights array for each individual
+            float weights_sum - sum of weights
         '''
         weights = []
         for bit_individ in self.population:
@@ -85,10 +89,12 @@ class Solver_8_queens:
         return weights, weights_sum
 
     def fitness_individ(self, bit_individ):
-        '''fitness function for individual
-        return:
-          weight - in range from 0 to 1
-          the more weight the better'''
+        '''Fitness function for individual.
+
+        Return:
+            weight - in range from 0 to 1
+            the more weight the better
+        '''
         individ = self.decode_individual(bit_individ)
         count = 0
         for i in range(Solver_8_queens.DIM_SIZE):
@@ -108,16 +114,13 @@ class Solver_8_queens:
         else:
             crossover_point = np.random.randint(
                 0,
-                Solver_8_queens.DIM_SIZE * Solver_8_queens.GENE_SIZE
-            )
+                Solver_8_queens.DIM_SIZE * Solver_8_queens.GENE_SIZE)
             new_indiv1 = bitarray(
                 indiv1[:crossover_point]
-                + indiv2[crossover_point:]
-            )
+                + indiv2[crossover_point:])
             new_indiv2 = bitarray(
                 indiv2[:crossover_point]
-                + indiv1[crossover_point:]
-            )
+                + indiv1[crossover_point:])
             return new_indiv1, new_indiv2
 
     def mutation(self):
@@ -128,10 +131,14 @@ class Solver_8_queens:
                 individ[locus] = not individ[locus]
     
     def check_pair_queens(self, q1, q2):
-        '''check only diagonal intersection
-        return:
-          True  - if queens doesn't intersect
-          False - if queens intersect'''
+        '''Check intersection of two queens.
+
+        Check only diagonal intersection.
+
+        Return:
+            True  - if queens doesn't intersect
+            False - if queens intersect
+        '''
         if abs(q1[0] - q2[0])==abs(q1[1] - q2[1]):
             return False
         else:
@@ -146,6 +153,12 @@ class Solver_8_queens:
         return individ
     
     def decode_individual(self, individ):
+        '''Decode individual.
+
+        Get bitarray individual.
+
+        Return list of positions in rows.
+        '''
         occupied_cols = bitarray(8)
         occupied_cols.setall(False)
         current_cols = 0
@@ -167,7 +180,7 @@ class Solver_8_queens:
         return decoded_individ
     
     def get_individ_visualization(self, individ):
-        '''individual string interpretation for vizualization'''
+        '''Individual string interpretation for vizualization.'''
         display = [['+' for _ in range(Solver_8_queens.DIM_SIZE)]
             for _ in range(Solver_8_queens.DIM_SIZE)]
         decoded_individ = self.decode_individual(individ)
@@ -176,6 +189,7 @@ class Solver_8_queens:
         rows = [''.join(row) for row in display]
         viz = '\n'.join(rows)
         return viz
+
 
 def tuning():
     df = []
