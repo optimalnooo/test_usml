@@ -125,7 +125,6 @@ class Solver_8_queens:
                 locus = np.random.randint(0,
                     Solver_8_queens.DIM_SIZE * Solver_8_queens.GENE_SIZE)
                 mask[locus:] = ~mask[locus:]
-        print(mask)
         new_individ1 = bitarray()
         new_individ2 = bitarray()
         for i in range(len(mask)):
