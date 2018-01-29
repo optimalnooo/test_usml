@@ -214,6 +214,18 @@ def tuning():
                     errors += 1
             average_epoch = all_epochs / iters
             average_time = all_time / iters
-            df.append([pop_size, mut_prob, max_epochs, errors, average_time, average_epoch])
-    df = pd.DataFrame(df, columns=['pop_size', 'mut_prob', 'max_epochs', 'errors', 'average_time', 'average_epoch'])
+            df.append([
+                pop_size,
+                mut_prob,
+                max_epochs,
+                errors,
+                average_time,
+                average_epoch])
+    df = pd.DataFrame(df, columns=[
+        'pop_size',
+        'mut_prob',
+        'max_epochs',
+        'errors',
+        'average_time',
+        'average_epoch'])
     df.to_csv('tuning.csv')
