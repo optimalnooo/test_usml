@@ -13,7 +13,7 @@ class Solver_8_queens:
     GENE_SIZE = 3
     ABS_MAX_FITNESS_VALUE = DIM_SIZE * (DIM_SIZE - 1) / 2
 
-    def __init__(self, pop_size=2000, cross_prob=1, mut_prob=0.7, tournament_size=3, crossover_points_size=None):
+    def __init__(self, pop_size=2500, cross_prob=1, mut_prob=0.67, tournament_size=3, crossover_points_size=2):
         if pop_size % 2:
             self.pop_size = pop_size + 1
         else:
