@@ -195,6 +195,7 @@ def tuning():
     df = []
     iters = 1000
     max_epochs = 100
+    min_fitness = 1
     for pop_size in range(200, 3000, 100):
         print('Pop_size: {0}'.format(pop_size))
         for mut_prob in np.arange(0, 0.9, 0.1):
@@ -205,11 +206,11 @@ def tuning():
             for iterat in range(iters):
                 start = time.clock()
                 solver = Solver_8_queens(pop_size, 1, mut_prob)
-                best_fit, epoch, _ = solver.solve(Solver_8_queens.MAX_FITNESS_VALUE, max_epochs)
+                best_fit, epoch, _ = solver.solve(min_fitness, max_epochs)
                 finish = time.clock()
                 all_time += finish - start
                 all_epochs += epoch
-                if best_fit < Solver_8_queens.MAX_FITNESS_VALUE:
+                if best_fit < min_fitness:
                     errors += 1
             average_epoch = all_epochs / iters
             average_time = all_time / iters
