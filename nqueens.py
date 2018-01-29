@@ -207,25 +207,50 @@ class Solver_8_queens:
 def tuning():
     df = []
     iters = 1000
-    max_epochs = 100
-    for pop_size in range(200, 3000, 100):
-        print('Pop_size: {0}'.format(pop_size))
-        for mut_prob in np.arange(0, 0.9, 0.1):
-            print('Mut_prob: {0}'.format(mut_prob))
-            errors = 0
-            all_time = 0
-            all_epochs = 0
-            for iterat in range(iters):
-                start = time.clock()
-                solver = Solver_8_queens(pop_size, 1, mut_prob)
-                best_fit, epoch, _ = solver.solve(Solver_8_queens.MAX_FITNESS_VALUE, max_epochs)
-                finish = time.clock()
-                all_time += finish - start
-                all_epochs += epoch
-                if best_fit < Solver_8_queens.MAX_FITNESS_VALUE:
-                    errors += 1
-            average_epoch = all_epochs / iters
-            average_time = all_time / iters
-            df.append([pop_size, mut_prob, max_epochs, errors, average_time, average_epoch])
-    df = pd.DataFrame(df, columns=['pop_size', 'mut_prob', 'max_epochs', 'errors', 'average_time', 'average_epoch'])
-    df.to_csv('tuning.csv')
+    max_epochs = 20
+    min_fitness = 1
+    for tournament_size in range(2,10):
+        print('Tournament size: {0}'.format(tournament_size))
+        for crossover_points_size in range(1, 10):
+            print('\tCrossover points size: {0}'.format(
+                                                crossover_points_size))
+            for pop_size in range(2000, 4000, 200):
+                print('\t\tPop_size: {0}'.format(pop_size))
+                for mut_prob in np.arange(0.6, 0.9, 0.05):
+                    print('\t\t\tMut_prob: {0}'.format(mut_prob))
+                    errors = 0
+                    all_time = 0
+                    all_epochs = 0
+                    for iterat in range(iters):
+                        start = time.clock()
+                        solver = Solver_8_queens(pop_size,
+                            1,
+                            mut_prob,
+                            tournament_size,
+                            crossover_points_size)
+                        best_fit, epoch, _ = solver.solve(min_fitness,
+                                                            max_epochs)
+                        finish = time.clock()
+                        all_time += finish - start
+                        all_epochs += epoch
+                        if best_fit < min_fitness:
+                            errors += 1
+                    average_epoch = all_epochs / iters
+                    average_time = all_time / iters
+                    df.append([tournament_size,
+                        crossover_points_size,
+                        pop_size,
+                        mut_prob,
+                        max_epochs,
+                        errors,
+                        average_time,
+                        average_epoch])
+    df = pd.DataFrame(df, columns=['tournament_size',
+                                'crossover_points_size',
+                                'pop_size',
+                                'mut_prob',
+                                'max_epochs',
+                                'errors',
+                                'average_time',
+                                'average_epoch'])
+    df.to_csv('bonus_tuning.csv')
